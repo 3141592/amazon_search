@@ -1,5 +1,5 @@
 Feature: Automation test
-  Scenario: A user goes to amazon.com and searches for iphone 6
+  Scenario: A user goes to amazon.com and searches for iphone 6 plus case
     Given I am on the Amazon home page
     When I search for "iPhone 6 plus case"
     And I sort it by price from lowest to highest

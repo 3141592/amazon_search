@@ -5,6 +5,22 @@ class Product
   attr_accessor :name, :price
 end
 
+module SortOptions
+  Relevance = 0
+  Featured = 1
+  PriceLowToHigh = 2
+  PriceHighToLow = 3
+  AvgCustomerReview = 4
+  NewestArrivals = 5
+end
+
+SORTBY = ['Relevance',
+                   'Featured',
+                   'Price: Low to High',
+                   'Price: High to Low',
+                   'Avg. Customer Review',
+                   'Newest Arrivals'] 
+
 @product_array = []
 
 Given (/^I am on the Amazon home page$/) do
@@ -20,17 +36,17 @@ When(/^I search for "([^"]*)"$/) do |arg1|
   @browser.send_keys :return
 
   # Verification
-  #search_box = @browser.text_field(:id => 'twotabsearchtextbox')
-  #raise "Search for #{arg1} failed." unless @browser.text_field(:id => 'twotabsearchtextbox').text.include?(arg1)
-
+  raise "Search for #{arg1} failed." if @browser.text.include?('did not match any products')
 end
 
 When(/^I sort it by price from lowest to highest$/) do
+  sort_option = SortOptions::PriceLowToHigh
   # Set the department in order to Sort
   @browser.select_list(:id => 'searchDropdownBox').option(:text => 'Cell Phones & Accessories').select
-  @browser.select_list(:id => 'sort').option(:text => 'Price: Low to High').select
+  @browser.select_list(:id => 'sort').option(:text => SORTBY[sort_option]).select
   # Wait for sorted page to refresh
   sleep(10)
+  validate_price_sort()
 end
 
 Then(/^I return the name and price of the top (\d+) results$/) do |arg1|
@@ -39,8 +55,10 @@ Then(/^I return the name and price of the top (\d+) results$/) do |arg1|
 end
 
 Then(/^I sort it by Avg\. Customer Review$/) do
-  @browser.select_list(:id => 'sort').option(:text => 'Avg. Customer Review').select
+  sort_option = SortOptions::AvgCustomerReview
+  @browser.select_list(:id => 'sort').option(:text => SORTBY[sort_option]).select
   sleep(10)
+  validate_review_sort()
 end
 
 def return_name_and_price(top_count)
@@ -54,6 +72,14 @@ def return_name_and_price(top_count)
     product.price = result_li.span(:class=>'a-size-base').text
     @product_array << product
   end
+end
+
+def validate_price_sort()
+  
+end
+
+def validate_review_sort()
+  
 end
 
 def print_product_array
