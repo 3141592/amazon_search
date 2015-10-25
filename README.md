@@ -19,9 +19,13 @@ Scenario:
 extra: Return the name and price of the top 3 results with the best reviews.
 
 To execute:
+
   >$ git clone https://github.com/3141592/amazon_search.git
+  
   >$ cd amazon_search
+  
   >$ cucumber
+  
 
 Output:
 
