@@ -14,6 +14,11 @@ module SortOptions
   NewestArrivals = 5
 end
 
+module Order
+  Ascending = 0
+  Descending = 1
+end
+
 SORTBY = ['Relevance',
                    'Featured',
                    'Price: Low to High',
@@ -36,7 +41,7 @@ When(/^I search for "([^"]*)"$/) do |arg1|
   @browser.send_keys :return
 
   # Verification
-  raise "Search for #{arg1} failed." if @browser.text.include?('did not match any products')
+  raise "Search for #{arg1} failed." unless @browser.div(:class=>'s-first-column').h2(:id=>'s-result-count').present?
 end
 
 When(/^I sort it by price from lowest to highest$/) do
@@ -46,7 +51,7 @@ When(/^I sort it by price from lowest to highest$/) do
   @browser.select_list(:id => 'sort').option(:text => SORTBY[sort_option]).select
   # Wait for sorted page to refresh
   sleep(10)
-  validate_price_sort()
+  validate_price_sort(Order::Ascending)
 end
 
 Then(/^I return the name and price of the top (\d+) results$/) do |arg1|
@@ -58,7 +63,7 @@ Then(/^I sort it by Avg\. Customer Review$/) do
   sort_option = SortOptions::AvgCustomerReview
   @browser.select_list(:id => 'sort').option(:text => SORTBY[sort_option]).select
   sleep(10)
-  validate_review_sort()
+  validate_review_desc_sort()
 end
 
 def return_name_and_price(top_count)
@@ -74,11 +79,23 @@ def return_name_and_price(top_count)
   end
 end
 
-def validate_price_sort()
+def validate_price_sort(order)
+  ordered_prices = []
+  price_spans = @browser.spans(:class=> 'a-size-base')
+  price_spans.each do |span|
+    if span.text[0] == '$'
+      ordered_prices << span.text
+    end
+  end
   
+  if  order == Order::Ascending
+    raise "Sort by Price failed." unless ordered_prices == ordered_prices.sort
+  else
+    raise "Sort by Price failed." unless ordered_prices == ordered_prices.reverse
+  end
 end
 
-def validate_review_sort()
+def validate_review_desc_sort()
   
 end
 
