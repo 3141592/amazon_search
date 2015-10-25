@@ -63,7 +63,7 @@ Then(/^I sort it by Avg\. Customer Review$/) do
   sort_option = SortOptions::AvgCustomerReview
   @browser.select_list(:id => 'sort').option(:text => SORTBY[sort_option]).select
   sleep(10)
-  validate_review_desc_sort()
+  validate_review_sort()
 end
 
 def return_name_and_price(top_count)
@@ -95,7 +95,7 @@ def validate_price_sort(order)
   end
 end
 
-def validate_review_desc_sort()
+def validate_review_sort()
   
 end
 
