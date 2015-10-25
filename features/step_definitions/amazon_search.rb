@@ -10,11 +10,19 @@ end
 Given (/^I am on the Amazon home page$/) do
   @browser = Watir::Browser.new
   @browser.goto "http://www.amazon.com"
+
+  # Verification
+  raise "Navigation to www.amazon.com failed." unless @browser.url.include?('www.amazon.com')
 end
 
 When(/^I search for "([^"]*)"$/) do |arg1|
   @browser.text_field(:name => "field-keywords").set arg1
   @browser.send_keys :return
+
+  # Verification
+  #search_box = @browser.text_field(:id => 'twotabsearchtextbox')
+  #raise "Search for #{arg1} failed." unless @browser.text_field(:id => 'twotabsearchtextbox').text.include?(arg1)
+
 end
 
 When(/^I sort it by price from lowest to highest$/) do
