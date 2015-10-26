@@ -16,7 +16,7 @@ Scenario:
 
   >Then I return the name and price of the top 3 results
 
-extra: Return the name and price of the top 3 results with the best reviews.
+  >extra: Return the name and price of the top 3 results with the best reviews.
 
 To execute:
 
