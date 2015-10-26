@@ -41,6 +41,7 @@ When(/^I search for "([^"]*)"$/) do |arg1|
   @browser.send_keys :return
 
   # Verification
+  # Use the results count at the top left of the page to verify that items were found.
   raise "Search for #{arg1} failed." unless @browser.div(:class=>'s-first-column').h2(:id=>'s-result-count').present?
 end
 
@@ -49,7 +50,8 @@ When(/^I sort it by price from lowest to highest$/) do
   # Set the department in order to Sort
   @browser.select_list(:id => 'searchDropdownBox').option(:text => 'Cell Phones & Accessories').select
   @browser.select_list(:id => 'sort').option(:text => SORTBY[sort_option]).select
-  # Wait for sorted page to refresh
+  
+  # Wait for sorted page to refresh.
   sleep(10)
   validate_price_sort(Order::Ascending)
 end
@@ -66,10 +68,15 @@ Then(/^I sort it by Avg\. Customer Review$/) do
   validate_review_sort()
 end
 
+# Public: Get the first 'top_count' products returned and add a Product object to the @product_array.
+#
+# top_count  - Number of products to return.
 def return_name_and_price(top_count)
   @product_array = []
   for i in 0..(top_count - 1)
     result_id = "result_#{i}"
+    
+    # Get the complete list of products returned on the page.
     result_li = @browser.ul(:id => 's-results-list-atf').li(:id => result_id)
     
     product = Product.new
@@ -79,10 +86,16 @@ def return_name_and_price(top_count)
   end
 end
 
+# Public: Verify that products were returned in the correct order.
+#
+# order  - Order.Ascending or Order.Descending describing order of product listing.
 def validate_price_sort(order)
-  ordered_prices = []
+  ordered_prices = [] 
+  
+  # Get all the spans that include prices.
   price_spans = @browser.spans(:class=> 'a-size-base')
   price_spans.each do |span|
+    # A few of the spans returned do not hold prices.
     if span.text[0] == '$'
       ordered_prices << span.text
     end
@@ -95,10 +108,14 @@ def validate_price_sort(order)
   end
 end
 
+# Public: Verify that products were returned in the correct order.
+#
 def validate_review_sort()
   
 end
 
+# Public: Print each object in the @product_array.
+#
 def print_product_array
   @product_array.each do |product|
     puts product.name
@@ -107,3 +124,8 @@ def print_product_array
   end
 end
 
+# Public: Centralized exception handler.
+#
+def exception_handler(ex)
+  
+end
