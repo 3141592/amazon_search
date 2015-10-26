@@ -34,6 +34,7 @@ Given (/^I am on the Amazon home page$/) do
 
   # Verification
   raise "Navigation to www.amazon.com failed." unless @browser.url.include?('www.amazon.com')
+  raise "Page not found error navigating to amazon.com" if @browser.text.include?('Page not found')
 end
 
 When(/^I search for "([^"]*)"$/) do |arg1|
