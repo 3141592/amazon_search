@@ -49,6 +49,7 @@ When(/^I sort it by price from lowest to highest$/) do
   sort_option = SortOptions::PriceLowToHigh
   # Set the department in order to Sort
   @browser.select_list(:id => 'searchDropdownBox').option(:text => 'Cell Phones & Accessories').select
+  @browser.select(:id => 'sort').wait_until_present
   @browser.select_list(:id => 'sort').option(:text => SORTBY[sort_option]).select
   
   # Wait for sorted page to refresh.
@@ -81,7 +82,7 @@ def return_name_and_price(top_count)
     
     product = Product.new
     product.name = result_li.h2.text
-    product.price = result_li.span(:class=>'a-size-base').text
+    product.price = result_li.span(:class=>/s-price/).text
     @product_array << product
   end
 end
@@ -93,12 +94,9 @@ def validate_price_sort(order)
   ordered_prices = [] 
   
   # Get all the spans that include prices.
-  price_spans = @browser.spans(:class=> 'a-size-base')
+  price_spans = @browser.spans(:class=> /s-price/)
   price_spans.each do |span|
-    # A few of the spans returned do not hold prices.
-    if span.text[0] == '$'
-      ordered_prices << span.text
-    end
+    ordered_prices << span.text
   end
   
   if  order == Order::Ascending
@@ -120,7 +118,7 @@ def print_product_array
   @product_array.each do |product|
     puts product.name
     puts product.price
-    puts "-"*40
+    puts "-"*8
   end
 end
 
