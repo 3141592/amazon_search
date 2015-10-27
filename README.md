@@ -1,7 +1,5 @@
 README
 
-Author: Roy Gunter
-
 Date:   10/24/2015
 
 OS:     CentOS 7
@@ -30,7 +28,7 @@ To execute:
 Output:
 
 ````
-[rgunter@chef-client amazon_search]$ cucumber
+[chef-client amazon_search]$ cucumber
 Feature: Automation test
 
   Scenario: A user goes to amazon.com and searches for iphone 6 plus case # features/amazon_search.feature:2
